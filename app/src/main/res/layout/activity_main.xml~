@@ -6,14 +6,6 @@
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize">
 
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_height="wrap_content"
-        android:layout_width="match_parent"
-        android:background="?attr/colorPrimary"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/nav_view"
         android:layout_width="0dp"
