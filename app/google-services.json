@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "113212296072",
+    "project_id": "projeto-saude-358a4",
+    "storage_bucket": "projeto-saude-358a4.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113212296072:android:63e0507274ddfd9e75c83d",
+        "android_client_info": {
+          "package_name": "com.aula.desafio_aula"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRv-a-vNz4_W6SCve5S-cXC1bXt48Roj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:113212296072:android:db5d3b8655737a8875c83d",
+        "android_client_info": {
+          "package_name": "com.aula.desafio_mobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDRv-a-vNz4_W6SCve5S-cXC1bXt48Roj4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
