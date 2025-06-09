@@ -7,7 +7,7 @@ import com.google.firebase.firestore.FirebaseFirestore
 
 class Database {
 
-    fun Database() {}
+    init {}
 
     fun abrirDB():FirebaseFirestore {
         return FirebaseFirestore.getInstance()
@@ -16,9 +16,27 @@ class Database {
     fun salvar(argAtendimento: Atendimento, c: Context) {
         val db = abrirDB()
 
-        db.collection("atendimento").document(argAtendimento.getId().toString())
-            .set(argAtendimento)
-        Toast.makeText(c, "Nota salva com sucesso!", Toast.LENGTH_SHORT).show()
+        // Se não tiver ID, cria um novo documento
+        if (argAtendimento.getId().isEmpty()) {
+            val docRef = db.collection("atendimento").document()
+            argAtendimento.setId(docRef.id) // Define o ID no objeto
+        }
+
+        // Converte para Map
+        val atendimentoMap = hashMapOf(
+            "nome" to argAtendimento.getNome(),
+            "entrada" to argAtendimento.getEntrada(),
+            "saida" to argAtendimento.getSaida()
+        )
+
+        db.collection("atendimento").document(argAtendimento.getId())
+            .set(atendimentoMap)
+            .addOnSuccessListener {
+                Toast.makeText(c, "Salvo com sucesso!", Toast.LENGTH_SHORT).show()
+            }
+            .addOnFailureListener { e ->
+                Toast.makeText(c, "Erro ao salvar: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
     }
 
     fun remover(argAtendimento: Atendimento, c: Context) {
@@ -33,7 +51,7 @@ class Database {
     fun listar(argAtendimento: MutableList<Atendimento>, argAdapter: AdapterAtendimento, c: Context){
         val db = abrirDB()
 
-        db.collection("ListaNotas")
+        db.collection("atendimento")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.w("Firestore", "Erro ao ouvir mudanças", error)
@@ -45,10 +63,13 @@ class Database {
                     argAtendimento.clear() // Limpa a lista antes de adicionar os novos itens
 
                     for (document in snapshot.documents) {
-                        val atendimento = document.toObject(Atendimento::class.java)
-                        atendimento?.let {
-                            argAtendimento.add(it)
+                        val atendimento = Atendimento().apply {
+                            setId(document.id)
+                            setNome(document.getString("nome") ?: "")
+                            setEntrada(document.getString("entrada") ?: "")
+                            setSaida(document.getString("saida") ?: "")
                         }
+                        argAtendimento.add(atendimento)
                     }
 
                     argAdapter.notifyDataSetChanged()
