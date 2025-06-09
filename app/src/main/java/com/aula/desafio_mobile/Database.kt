@@ -15,9 +15,23 @@ class Database {
     fun salvar(argAtendimento: Atendimento, c: Context) {
         val db = abrirDB()
 
-        // Registro NOVO
         db.collection("atendimento").document(argAtendimento.getId().toString())
             .set(argAtendimento)
         Toast.makeText(c, "Nota salva com sucesso!", Toast.LENGTH_SHORT).show()
     }
+
+    fun remover(argAtendimento: Atendimento, c: Context) {
+        val db = abrirDB()
+
+        db.collection("atendimento").document(argAtendimento.getId().toString())
+            .delete().addOnSuccessListener {
+                Toast.makeText(c, "Nota removida com sucesso!", Toast.LENGTH_SHORT).show()
+            }
+    }
+
+    fun listar(argAtendimento: MutableList<Atendimento>, argAdapter: AdapterAtendimento, c: Context){
+
+    }
+
+
 }
