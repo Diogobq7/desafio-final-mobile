@@ -13,10 +13,6 @@ class Atendimento {
         this.saida = saida
     }
 
-    fun getId(): Int {
-        return this.id
-    }
-
     fun getNome(): String {
         return this.nome
     }
@@ -27,10 +23,6 @@ class Atendimento {
 
     fun getSaida(): String {
         return this.saida
-    }
-
-    fun setId(id: Int) {
-        this.id = id
     }
 
     fun setNome(nome: String) {
