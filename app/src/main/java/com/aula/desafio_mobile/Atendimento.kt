@@ -1,6 +1,7 @@
 package com.aula.desafio_mobile
 
 class Atendimento {
+    private var id: String = ""
     private lateinit var nome: String
     private lateinit var entrada: String
     private lateinit var saida: String
@@ -13,6 +14,10 @@ class Atendimento {
         this.saida = saida
     }
 
+    fun getId(): String {
+        return this.id
+    }
+
     fun getNome(): String {
         return this.nome
     }
@@ -23,6 +28,10 @@ class Atendimento {
 
     fun getSaida(): String {
         return this.saida
+    }
+
+    fun setId(id: String) {
+        this.id = id
     }
 
     fun setNome(nome: String) {
