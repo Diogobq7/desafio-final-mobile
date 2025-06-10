@@ -10,11 +10,4 @@
         android:name="com.aula.desafio_mobile.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
-
-    <fragment
-        android:id="@+id/navigation_login"
-        android:name="com.aula.desafio_mobile.LoginFragment"
-        android:label="Login"
-        tools:layout="@layout/fragment_login"/>
-
 </navigation>
