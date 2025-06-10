@@ -4,35 +4,59 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.aula.desafio_mobile.AdapterAtendimento
+import com.aula.desafio_mobile.Atendimento
+import com.aula.desafio_mobile.Database
 import com.aula.desafio_mobile.databinding.FragmentHomeBinding
 
 class HomeFragment : Fragment() {
-
     private var _binding: FragmentHomeBinding? = null
-
-    // This property is only valid between onCreateView and
-    // onDestroyView.
     private val binding get() = _binding!!
+    private lateinit var adapterAtendimento: AdapterAtendimento
+    private val atendimentos = mutableListOf<Atendimento>()
+    private val db = Database()
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        val homeViewModel =
-            ViewModelProvider(this).get(HomeViewModel::class.java)
-
         _binding = FragmentHomeBinding.inflate(inflater, container, false)
-        val root: View = binding.root
+        return binding.root
+    }
 
-        val textView: TextView = binding.textHome
-        homeViewModel.text.observe(viewLifecycleOwner) {
-            textView.text = it
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        setupRecyclerView()
+        setupFirestoreListener()
+    }
+
+    private fun setupRecyclerView() {
+        adapterAtendimento = AdapterAtendimento(atendimentos).apply {
+            // Configurações adicionais do adapter, se necessário
         }
-        return root
+
+        binding.rv.apply {
+            layoutManager = LinearLayoutManager(requireContext())
+            adapter = adapterAtendimento
+            addItemDecoration(
+                DividerItemDecoration(requireContext(), DividerItemDecoration.VERTICAL)
+            )
+        }
+    }
+
+    private fun setupFirestoreListener() {
+        db.listar(atendimentos, adapterAtendimento, requireContext())
+    }
+
+    fun addAtendimento(atendimento: Atendimento) {
+        db.salvar(atendimento, requireContext())
+        // Não precisa adicionar manualmente, o listener do Firestore atualizará
     }
 
     override fun onDestroyView() {

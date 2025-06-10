@@ -60,9 +60,13 @@ class Database {
                 }
 
                 if (snapshot != null) {
-                    argAtendimento.clear() // Limpa a lista antes de adicionar os novos itens
+                    Log.d("Firestore", "Snapshot recebido com ${snapshot.documents.size} documentos")
+
+                    argAtendimento.clear()
 
                     for (document in snapshot.documents) {
+                        Log.d("Firestore", "Documento: ${document.data}")
+
                         val atendimento = Atendimento().apply {
                             setId(document.id)
                             setNome(document.getString("nome") ?: "")
@@ -72,6 +76,7 @@ class Database {
                         argAtendimento.add(atendimento)
                     }
 
+                    Log.d("Firestore", "Lista atualizada com ${argAtendimento.size} atendimentos")
                     argAdapter.notifyDataSetChanged()
                 } else {
                     Log.d("Firestore", "Nenhum dado encontrado")
@@ -79,6 +84,7 @@ class Database {
                 }
             }
     }
+
 
 
 }

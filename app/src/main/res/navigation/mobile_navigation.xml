@@ -3,26 +3,18 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/mobile_navigation"
-    app:startDestination="@id/navigation_login">
+    app:startDestination="@id/navigation_home">
 
     <fragment
         android:id="@+id/navigation_home"
         android:name="com.aula.desafio_mobile.ui.home.HomeFragment"
         android:label="@string/title_home"
         tools:layout="@layout/fragment_home" />
+
     <fragment
         android:id="@+id/navigation_login"
         android:name="com.aula.desafio_mobile.LoginFragment"
-        android:label="fragment_login"
-        tools:layout="@layout/fragment_login" >
-        <action
-            android:id="@+id/action_loginFragment_to_navigation_home"
-            app:destination="@id/navigation_home" />
-    </fragment>
-    <fragment
-        android:id="@+id/recicleFragment"
-        android:name="com.aula.desafio_mobile.RecicleFragment"
-        android:label="fragment_recicle"
-        tools:layout="@layout/fragment_recicle" />
+        android:label="Login"
+        tools:layout="@layout/fragment_login"/>
 
 </navigation>
