@@ -5,5 +5,9 @@
         android:id="@+id/navigation_login"
         android:icon="@drawable/ic_home_black_24dp"
         android:title="@string/title_home" />
+    <item
+        android:id="@+id/navigation_admin"
+        android:icon="@android:drawable/ic_lock_lock"
+        android:title="Admin" />
 
 </menu>
