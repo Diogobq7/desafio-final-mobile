@@ -1,8 +1,8 @@
 package com.aula.desafio_mobile
 
 class Funcionario {
-    private lateinit var nome: String
-    private lateinit var cracha: String
+    private var nome: String
+    private var cracha: String
 
     constructor(nome: String, cracha: String) {
         this.nome = nome
