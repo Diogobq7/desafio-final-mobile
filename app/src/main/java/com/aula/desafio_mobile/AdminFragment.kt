@@ -5,6 +5,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.Toast
+import androidx.navigation.Navigation
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -32,9 +35,26 @@ class AdminFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View?  {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_admin, container, false)
+        val view = inflater.inflate(R.layout.fragment_admin, container, false)
+
+        val btEntrar = view.findViewById<View>(R.id.bt_entrar)
+
+        btEntrar.setOnClickListener() {
+            val inputSenha = view.findViewById<EditText>(R.id.input_senha)
+            val senha = inputSenha.text.toString()
+
+            if (senha == "1234") {
+                val navController = Navigation.findNavController(view)
+                Toast.makeText(context, "Senha correta!", Toast.LENGTH_SHORT).show()
+                navController.navigate(R.id.action_navigation_admin_to_homeAdminFragment)
+            } else {
+                Toast.makeText(context, "Senha incorreta!", Toast.LENGTH_SHORT).show()
+            }
+        }
+
+        return view;
     }
 
     companion object {
