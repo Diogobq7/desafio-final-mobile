@@ -6,9 +6,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import java.security.AccessController.getContext
+import com.google.type.DateTime
 
 class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mutableListOf()) : RecyclerView.Adapter<AdapterAtendimento.ViewHolder>() {
     private val db = Database()
@@ -24,8 +23,11 @@ class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mu
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nome.text = atendimentos[position].getNome()
-        holder.entrada.text = atendimentos[position].getEntrada()
-        holder.saida.text = atendimentos[position].getSaida()
+        holder.entrada.text = atendimentos[position].getEntrada().toString()
+
+        val saida = atendimentos[position].getSaida()
+        holder.saida.text = saida.toString()
+        holder.saida.visibility = View.VISIBLE
 
         holder.itemView.setOnLongClickListener {
             val caixaAlert = Dialog(holder.itemView.context)
@@ -42,9 +44,15 @@ class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mu
             }
             sim.setOnClickListener {
                 // Atualizar objeto da lista
-                val atendimento = atendimentos[position].setSaida("agora foi bixo") as Atendimento
+                val atendimento = atendimentos[position]
+
+                val dataHoraAtual = java.time.LocalDateTime.now().format(
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                )
+                atendimento.setSaida(dataHoraAtual)
                 db.salvar(atendimento, holder.itemView.context)
                 caixaAlert.dismiss()
+                notifyItemChanged(position)
             }
             caixaAlert.show()
             true

@@ -1,6 +1,5 @@
 package com.aula.desafio_mobile;
 
-import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -17,7 +16,6 @@ import com.bumptech.glide.Glide;
 
 public class Splash extends AppCompatActivity {
 
-    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,7 +35,7 @@ public class Splash extends AppCompatActivity {
                 .into(gifView);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(Splash.this, Login.class));
+            startActivity(new Intent(Splash.this, MainActivity.class));
             finish();
         }, 4000);
     }
