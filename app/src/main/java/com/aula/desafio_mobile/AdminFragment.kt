@@ -88,7 +88,7 @@ class AdminFragment : Fragment() {
         val db = FirebaseFirestore.getInstance()
         val querySnapshot = db.collection("admin")
             .whereEqualTo("user", user)
-            .whereEqualTo("password", password)
+            .whereEqualTo("senha", password)
             .get().await()
         if (!querySnapshot.isEmpty) return true
         return false
