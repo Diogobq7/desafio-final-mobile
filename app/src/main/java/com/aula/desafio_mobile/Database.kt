@@ -3,18 +3,14 @@ package com.aula.desafio_mobile
 import android.content.Context
 import android.util.Log
 import android.widget.Toast
-import com.google.firebase.Firebase
-import com.google.firebase.FirebaseApp
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.firestore
 
 class Database {
 
     init {}
 
     fun abrirDB():FirebaseFirestore {
-        val db = Firebase.firestore
-        return db
+        return FirebaseFirestore.getInstance()
     }
 
     fun salvar(argAtendimento: Atendimento, c: Context) {
@@ -52,7 +48,7 @@ class Database {
             }
     }
 
-    fun listar(argAtendimento: MutableList<Atendimento>, argAdapter: AdapterAtendimento, c: Context) {
+    fun listar(argAtendimento: MutableList<Atendimento>, argAdapter: AdapterAtendimento, c: Context){
         val db = abrirDB()
 
         db.collection("atendimento")
@@ -71,16 +67,11 @@ class Database {
                     for (document in snapshot.documents) {
                         Log.d("Firestore", "Documento: ${document.data}")
 
-                        // Safe conversion of fields
-                        val nome = document.get("nome")?.toString() ?: ""
-                        val entrada = document.get("entrada")?.toString() ?: ""
-                        val saida = document.get("saida")?.toString() ?: ""
-
                         val atendimento = Atendimento().apply {
                             setId(document.id)
-                            setNome(nome)
-                            setEntrada(entrada)
-                            setSaida(saida)
+                            setNome(document.getString("nome") ?: "")
+                            setEntrada(document.getString("entrada") ?: "")
+                            setSaida(document.getString("saida") ?: "")
                         }
                         argAtendimento.add(atendimento)
                     }
@@ -93,5 +84,7 @@ class Database {
                 }
             }
     }
+
+
 
 }
