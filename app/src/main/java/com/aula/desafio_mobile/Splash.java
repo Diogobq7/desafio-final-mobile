@@ -35,7 +35,7 @@ public class Splash extends AppCompatActivity {
                 .into(gifView);
 
         new Handler(Looper.getMainLooper()).postDelayed(() -> {
-            startActivity(new Intent(Splash.this, MainActivity.class));
+            startActivity(new Intent(Splash.this, Login.class));
             finish();
         }, 4000);
     }
