@@ -1,5 +1,6 @@
 package com.aula.desafio_mobile
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.view.LayoutInflater
 import android.view.View
@@ -8,7 +9,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
-import java.security.AccessController.getContext
+import com.google.type.DateTime
 
 class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mutableListOf()) : RecyclerView.Adapter<AdapterAtendimento.ViewHolder>() {
     private val db = Database()
@@ -22,32 +23,53 @@ class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mu
         return atendimentos.size
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.nome.text = atendimentos[position].getNome()
-        holder.entrada.text = atendimentos[position].getEntrada()
-        holder.saida.text = atendimentos[position].getSaida()
+        holder.entrada.text = "Entrada: " + atendimentos[position].getEntrada()
+
+        val saida = atendimentos[position].getSaida()
+        holder.saida.visibility = View.GONE
+        if (saida != "") {
+            holder.saida.text = "Saída: $saida"
+            holder.saida.visibility = View.VISIBLE
+        }
 
         holder.itemView.setOnLongClickListener {
-            val caixaAlert = Dialog(holder.itemView.context)
-            caixaAlert.setContentView(R.layout.finalizar_atendimento)
-            caixaAlert.window?.setLayout(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            caixaAlert.setCancelable(false)
-            caixaAlert.window?.setBackgroundDrawableResource(android.R.color.transparent)
+            if (saida == "") {
+                val caixaAlert = Dialog(holder.itemView.context)
+                caixaAlert.setContentView(R.layout.finalizar_atendimento)
+                caixaAlert.window?.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                caixaAlert.setCancelable(false)
+                caixaAlert.window?.setBackgroundDrawableResource(android.R.color.transparent)
 
-            val nao = caixaAlert.findViewById<Button>(R.id.nao)
-            val sim = caixaAlert.findViewById<Button>(R.id.sim)
+                val nao = caixaAlert.findViewById<Button>(R.id.nao)
+                val sim = caixaAlert.findViewById<Button>(R.id.sim)
 
-            nao.setOnClickListener {
-                caixaAlert.dismiss()
+                nao.setOnClickListener {
+                    caixaAlert.dismiss()
+                }
+                sim.setOnClickListener {
+                    // Atualizar objeto da lista
+                    val atendimento = atendimentos[position]
+
+                    val dataHoraAtual = java.time.LocalDateTime.now().format(
+                        java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                    )
+                    atendimento.setSaida(dataHoraAtual)
+                    db.salvar(atendimento, holder.itemView.context)
+                    caixaAlert.dismiss()
+                    notifyItemChanged(position)
+                }
+                caixaAlert.show()
+                true
+            } else {
+                Toast.makeText(holder.itemView.context, "Atendimento já finalizado!", Toast.LENGTH_SHORT).show()
+                false
             }
-            sim.setOnClickListener {
-                // Atualizar objeto da lista
-                val atendimento = atendimentos[position].setSaida("agora foi bixo") as Atendimento
-                db.salvar(atendimento, holder.itemView.context)
-                caixaAlert.dismiss()
-            }
-            caixaAlert.show()
-            true
         }
     }
 

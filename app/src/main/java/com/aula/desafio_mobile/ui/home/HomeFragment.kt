@@ -12,6 +12,7 @@ import com.aula.desafio_mobile.AdapterAtendimento
 import com.aula.desafio_mobile.Atendimento
 import com.aula.desafio_mobile.Database
 import com.aula.desafio_mobile.databinding.FragmentHomeBinding
+import com.google.firebase.FirebaseApp
 
 class HomeFragment : Fragment() {
     private var _binding: FragmentHomeBinding? = null
