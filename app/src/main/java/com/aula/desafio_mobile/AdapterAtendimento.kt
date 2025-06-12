@@ -74,7 +74,6 @@ class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mu
     }
 
     class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        // O ViewHolder indica quais são os componentes do cardView
         var nome: TextView
         var entrada: TextView
         var saida: TextView

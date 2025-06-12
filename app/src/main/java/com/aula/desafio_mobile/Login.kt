@@ -12,7 +12,6 @@ import androidx.core.view.WindowInsetsCompat
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.coroutines.tasks.await
 import androidx.lifecycle.lifecycleScope
-import androidx.navigation.Navigation
 import kotlinx.coroutines.launch
 
 

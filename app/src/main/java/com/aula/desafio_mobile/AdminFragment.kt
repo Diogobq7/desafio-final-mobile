@@ -8,6 +8,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.Toast
 import androidx.navigation.Navigation
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.coroutines.tasks.await
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.launch
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,14 +47,18 @@ class AdminFragment : Fragment() {
 
         btEntrar.setOnClickListener() {
             val inputSenha = view.findViewById<EditText>(R.id.input_senha)
+            val inputUser = view.findViewById<EditText>(R.id.input_usuario)
             val senha = inputSenha.text.toString()
-
-            if (senha == "1234") {
-                val navController = Navigation.findNavController(view)
-                Toast.makeText(context, "Senha correta!", Toast.LENGTH_SHORT).show()
-                navController.navigate(R.id.action_navigation_admin_to_homeAdminFragment)
-            } else {
-                Toast.makeText(context, "Senha incorreta!", Toast.LENGTH_SHORT).show()
+            val user = inputUser.text.toString()
+            lifecycleScope.launch {
+                val admin = buscarAdmin(user, senha)
+                if (admin) {
+                    val navController = Navigation.findNavController(view)
+                    Toast.makeText(context, "Senha correta!", Toast.LENGTH_SHORT).show()
+                    navController.navigate(R.id.action_navigation_admin_to_homeAdminFragment)
+                } else {
+                    Toast.makeText(context, "Senha incorreta!", Toast.LENGTH_SHORT).show()
+                }
             }
         }
 
@@ -75,5 +83,14 @@ class AdminFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+    suspend fun buscarAdmin(user: String, password: String): Boolean {
+        val db = FirebaseFirestore.getInstance()
+        val querySnapshot = db.collection("admin")
+            .whereEqualTo("user", user)
+            .whereEqualTo("password", password)
+            .get().await()
+        if (!querySnapshot.isEmpty) return true
+        return false
     }
 }
