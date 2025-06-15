@@ -54,7 +54,6 @@ class AdminFragment : Fragment() {
                 val admin = buscarAdmin(user, senha)
                 if (admin) {
                     val navController = Navigation.findNavController(view)
-                    Toast.makeText(context, "Senha correta!", Toast.LENGTH_SHORT).show()
                     navController.navigate(R.id.action_navigation_admin_to_homeAdminFragment)
                 } else {
                     Toast.makeText(context, "Senha incorreta!", Toast.LENGTH_SHORT).show()

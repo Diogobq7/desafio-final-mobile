@@ -97,13 +97,13 @@ class MainActivity : AppCompatActivity() {
         buttonAdd.setOnClickListener {
             val userName = editTextUserName.text?.toString()?.trim()
             if (!userName.isNullOrEmpty()) {
-                val currentDateTime = LocalDateTime.now().format(
-                    DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+                val dataHoraAtual = java.time.LocalDateTime.now().format(
+                    java.time.format.DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
                 )
 
                 val newAtendimento = Atendimento().apply {
                     setNome(userName)
-                    setEntrada(currentDateTime)
+                    setEntrada(dataHoraAtual)
                     setSaida("")
                 }
 

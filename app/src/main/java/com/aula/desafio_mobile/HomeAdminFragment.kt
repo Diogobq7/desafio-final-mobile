@@ -34,7 +34,7 @@ class HomeAdminFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapterAtendimento = AdapterAtendimento(atendimentos)
+        adapterAtendimento = AdapterAtendimento(atendimentos, true)
 
         binding.rvAdmin.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -47,10 +47,6 @@ class HomeAdminFragment : Fragment() {
 
     private fun setupFirestoreListener() {
         db.listarAtendimentesAteUmMesAtras(atendimentos, adapterAtendimento, requireContext())
-    }
-
-    fun addAtendimento(atendimento: Atendimento) {
-        db.salvar(atendimento, requireContext())
     }
 
     override fun onDestroyView() {

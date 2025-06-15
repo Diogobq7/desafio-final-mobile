@@ -38,9 +38,7 @@ class HomeFragment : Fragment() {
     }
 
     private fun setupRecyclerView() {
-        adapterAtendimento = AdapterAtendimento(atendimentos).apply {
-            // Configurações adicionais do adapter, se necessário
-        }
+        adapterAtendimento = AdapterAtendimento(atendimentos, false)
 
         binding.rv.apply {
             layoutManager = LinearLayoutManager(requireContext())
@@ -53,11 +51,6 @@ class HomeFragment : Fragment() {
 
     private fun setupFirestoreListener() {
         db.listar(atendimentos, adapterAtendimento, requireContext())
-    }
-
-    fun addAtendimento(atendimento: Atendimento) {
-        db.salvar(atendimento, requireContext())
-        // Não precisa adicionar manualmente, o listener do Firestore atualizará
     }
 
     override fun onDestroyView() {

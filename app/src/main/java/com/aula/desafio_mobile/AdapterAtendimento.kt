@@ -11,7 +11,10 @@ import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.google.type.DateTime
 
-class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mutableListOf()) : RecyclerView.Adapter<AdapterAtendimento.ViewHolder>() {
+class AdapterAtendimento(
+    private val atendimentos: MutableList<Atendimento> = mutableListOf(),
+    private val isAdmin: Boolean = false
+) : RecyclerView.Adapter<AdapterAtendimento.ViewHolder>() {
     private val db = Database()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AdapterAtendimento.ViewHolder {
@@ -69,6 +72,15 @@ class AdapterAtendimento(private val atendimentos: MutableList<Atendimento> = mu
             } else {
                 Toast.makeText(holder.itemView.context, "Atendimento já finalizado!", Toast.LENGTH_SHORT).show()
                 false
+            }
+        }
+
+        holder.itemView.setOnClickListener {
+            if (isAdmin) {
+                val atendimento = atendimentos[position]
+                db.remover(atendimento, holder.itemView.context)
+                atendimentos.removeAt(position)
+                notifyItemRemoved(position)
             }
         }
     }
