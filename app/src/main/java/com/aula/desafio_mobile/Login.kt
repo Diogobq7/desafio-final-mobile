@@ -35,7 +35,6 @@
                     if (funcionario != null) {
                         val intent = Intent(this@Login, MainActivity::class.java)
                         intent.putExtra("nome", funcionario.getNome())
-                        intent.putExtra("cracha", funcionario.getCracha())
                         startActivity(intent)
                     }else{
                         Toast.makeText(this@Login, "Funcionario não encontrado", Toast.LENGTH_SHORT).show()

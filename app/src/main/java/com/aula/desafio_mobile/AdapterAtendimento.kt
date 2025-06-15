@@ -77,10 +77,29 @@ class AdapterAtendimento(
 
         holder.itemView.setOnClickListener {
             if (isAdmin) {
-                val atendimento = atendimentos[position]
-                db.remover(atendimento, holder.itemView.context)
-                atendimentos.removeAt(position)
-                notifyItemRemoved(position)
+                val caixaAlert = Dialog(holder.itemView.context)
+                caixaAlert.setContentView(R.layout.excluir_atendimento)
+                caixaAlert.window?.setLayout(
+                    ViewGroup.LayoutParams.WRAP_CONTENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+                )
+                caixaAlert.setCancelable(false)
+                caixaAlert.window?.setBackgroundDrawableResource(android.R.color.transparent)
+
+                val nao = caixaAlert.findViewById<Button>(R.id.nao)
+                val sim = caixaAlert.findViewById<Button>(R.id.sim)
+
+                nao.setOnClickListener {
+                    caixaAlert.dismiss()
+                }
+                sim.setOnClickListener {
+                    val atendimento = atendimentos[position]
+                    db.remover(atendimento, holder.itemView.context)
+                    atendimentos.removeAt(position)
+                    caixaAlert.dismiss()
+                    notifyItemRemoved(position)
+                }
+                caixaAlert.show()
             }
         }
     }

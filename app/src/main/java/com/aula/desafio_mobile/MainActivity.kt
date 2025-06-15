@@ -24,7 +24,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
     private var nomeFuncionario: String = "Funcionário"
-    private var crachaFuncionario: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +33,6 @@ class MainActivity : AppCompatActivity() {
 
         // Obter dados do funcionário
         nomeFuncionario = intent.getStringExtra("nome") ?: "Funcionário"
-        crachaFuncionario = intent.getStringExtra("cracha") ?: ""
 
         // Configurar toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
@@ -49,7 +47,18 @@ class MainActivity : AppCompatActivity() {
         // Observar mudanças de destino para manter o título personalizado
         navController.addOnDestinationChangedListener { _, destination, _ ->
             when(destination.id) {
-                R.id.navigation_home, R.id.navigation_admin -> updateToolbarTitle()
+                R.id.navigation_home -> {
+                    updateToolbarTitle()
+                    binding.floatingActionButton.show()
+                }
+                R.id.navigation_admin -> {
+                    supportActionBar?.title = "Login Administrativo"
+                    binding.floatingActionButton.hide()
+                }
+                R.id.navigation_home_admin -> {
+                    supportActionBar?.title = "Painel Administrativo"
+                    binding.floatingActionButton.show()
+                }
             }
         }
 
@@ -73,7 +82,6 @@ class MainActivity : AppCompatActivity() {
 
     private fun updateToolbarTitle() {
         supportActionBar?.title = "Olá, $nomeFuncionario"
-        supportActionBar?.subtitle = "Crachá: $crachaFuncionario"
     }
 
     override fun onSupportNavigateUp(): Boolean {

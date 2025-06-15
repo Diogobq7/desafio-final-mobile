@@ -27,6 +27,8 @@ class AdminFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
+    private lateinit var inputUser: EditText
+    private lateinit var inputSenha: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -43,11 +45,13 @@ class AdminFragment : Fragment() {
         // Inflate the layout for this fragment
         val view = inflater.inflate(R.layout.fragment_admin, container, false)
 
+
+        inputSenha = view.findViewById(R.id.input_senha)
+        inputUser = view.findViewById(R.id.input_usuario)
+
         val btEntrar = view.findViewById<View>(R.id.bt_entrar)
 
         btEntrar.setOnClickListener() {
-            val inputSenha = view.findViewById<EditText>(R.id.input_senha)
-            val inputUser = view.findViewById<EditText>(R.id.input_usuario)
             val senha = inputSenha.text.toString()
             val user = inputUser.text.toString()
             lifecycleScope.launch {
@@ -62,6 +66,12 @@ class AdminFragment : Fragment() {
         }
 
         return view;
+    }
+
+    override fun onResume() {
+        super.onResume()
+        inputUser.text?.clear()
+        inputSenha.text?.clear()
     }
 
     companion object {
