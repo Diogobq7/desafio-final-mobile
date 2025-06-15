@@ -17,6 +17,7 @@
             android:layout_height="50dp"
             android:layout_marginTop="35dp"
             android:text="Deseja finalizar esse atendimento?"
+            android:textAlignment="center"
             android:textColor="#000000"
             android:textSize="20sp"
             android:textStyle="bold"
