@@ -3,10 +3,10 @@ package com.aula.desafio_mobile
 import android.app.Dialog
 import android.os.Bundle
 import android.widget.Button
-import androidx.navigation.NavController
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.navigateUp
@@ -15,7 +15,6 @@ import androidx.navigation.ui.setupWithNavController
 import com.aula.desafio_mobile.databinding.ActivityMainBinding
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.textfield.TextInputEditText
-import com.google.firebase.FirebaseApp
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -24,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     private val db = Database()
     private lateinit var navController: NavController
     private lateinit var appBarConfiguration: AppBarConfiguration
+    private var nomeFuncionario: String = "Funcionário"
+    private var crachaFuncionario: String = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,36 +32,51 @@ class MainActivity : AppCompatActivity() {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        // Obter dados do funcionário
+        nomeFuncionario = intent.getStringExtra("nome") ?: "Funcionário"
+        crachaFuncionario = intent.getStringExtra("cracha") ?: ""
+
+        // Configurar toolbar
         val toolbar = findViewById<Toolbar>(R.id.toolbar)
         setSupportActionBar(toolbar)
+        updateToolbarTitle()
 
-        FirebaseApp.initializeApp(applicationContext)
-
-        // Configuração da navegação
+        // Configurar navegação
         val navHostFragment = supportFragmentManager
             .findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.navController
+
+        // Observar mudanças de destino para manter o título personalizado
+        navController.addOnDestinationChangedListener { _, destination, _ ->
+            when(destination.id) {
+                R.id.navigation_home, R.id.navigation_admin -> updateToolbarTitle()
+            }
+        }
 
         val navView: BottomNavigationView = binding.navView
 
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.navigation_home, R.id.navigation_admin
+                R.id.navigation_home,
+                R.id.navigation_admin
             )
         )
 
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+        // Configurar Floating Action Button
         binding.floatingActionButton.setOnClickListener {
             showAddUserDialog()
         }
     }
 
+    private fun updateToolbarTitle() {
+        supportActionBar?.title = "Olá, $nomeFuncionario"
+        supportActionBar?.subtitle = "Crachá: $crachaFuncionario"
+    }
+
     override fun onSupportNavigateUp(): Boolean {
-        if (!::appBarConfiguration.isInitialized) {
-            return super.onSupportNavigateUp()
-        }
         return navController.navigateUp(appBarConfiguration) || super.onSupportNavigateUp()
     }
 
@@ -81,7 +97,6 @@ class MainActivity : AppCompatActivity() {
         buttonAdd.setOnClickListener {
             val userName = editTextUserName.text?.toString()?.trim()
             if (!userName.isNullOrEmpty()) {
-                // Criar novo atendimento
                 val currentDateTime = LocalDateTime.now().format(
                     DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
                 )
@@ -89,10 +104,9 @@ class MainActivity : AppCompatActivity() {
                 val newAtendimento = Atendimento().apply {
                     setNome(userName)
                     setEntrada(currentDateTime)
-                    setSaida("") // Sem data de término
+                    setSaida("")
                 }
 
-                // Salvar no Firestore
                 db.salvar(newAtendimento, this@MainActivity)
                 dialog.dismiss()
             } else {
