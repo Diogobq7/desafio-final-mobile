@@ -46,7 +46,7 @@ class HomeAdminFragment : Fragment() {
     }
 
     private fun setupFirestoreListener() {
-        db.listar(atendimentos, adapterAtendimento, requireContext())
+        db.listarAtendimentesAteUmMesAtras(atendimentos, adapterAtendimento, requireContext())
     }
 
     fun addAtendimento(atendimento: Atendimento) {

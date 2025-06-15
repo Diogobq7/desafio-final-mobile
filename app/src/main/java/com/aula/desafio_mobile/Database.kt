@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 class Database {
 
@@ -85,6 +87,55 @@ class Database {
             }
     }
 
+    fun listarAtendimentesAteUmMesAtras(argAtendimento: MutableList<Atendimento>, argAdapter: AdapterAtendimento, c: Context){
+        val db = abrirDB()
 
+        val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
+        val dataLimite = LocalDateTime.now().minusMonths(1)
+
+        db.collection("atendimento")
+            .addSnapshotListener { snapshot, error ->
+                if (error != null) {
+                    Log.w("Firestore", "Erro ao ouvir mudanças", error)
+                    Toast.makeText(c, "Você está off-line neste momento!", Toast.LENGTH_SHORT).show()
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null) {
+                    Log.d("Firestore", "Snapshot recebido com ${snapshot.documents.size} documentos")
+
+                    argAtendimento.clear()
+
+                    for (document in snapshot.documents) {
+                        val entradaStr = document.getString("entrada")
+
+                        if (entradaStr != null) {
+                            try {
+                                val entradaData = LocalDateTime.parse(entradaStr, formatter)
+
+                                if (entradaData.isAfter(dataLimite)) {
+                                    val atendimento = Atendimento().apply {
+                                        setId(document.id)
+                                        setNome(document.getString("nome") ?: "")
+                                        setEntrada(entradaStr)
+                                        setSaida(document.getString("saida") ?: "")
+                                    }
+                                    argAtendimento.add(atendimento)
+                                }
+
+                            } catch (e: Exception) {
+                                Log.w("Firestore", "Erro ao converter data: $entradaStr", e)
+                            }
+                        }
+                    }
+
+                    Log.d("Firestore", "Lista atualizada com ${argAtendimento.size} atendimentos")
+                    argAdapter.notifyDataSetChanged()
+                } else {
+                    Log.d("Firestore", "Nenhum dado encontrado")
+                    Toast.makeText(c, "Nenhum dado encontrado", Toast.LENGTH_SHORT).show()
+                }
+            }
+    }
 
 }
