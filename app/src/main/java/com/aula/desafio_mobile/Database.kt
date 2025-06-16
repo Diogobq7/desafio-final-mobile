@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import android.widget.Toast
 import com.google.firebase.firestore.FirebaseFirestore
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
@@ -11,7 +12,7 @@ class Database {
 
     init {}
 
-    fun abrirDB():FirebaseFirestore {
+    fun abrirDB(): FirebaseFirestore {
         return FirebaseFirestore.getInstance()
     }
 
@@ -50,19 +51,27 @@ class Database {
             }
     }
 
-    fun listar(argAtendimento: MutableList<Atendimento>, argAdapter: AdapterAtendimento, c: Context){
+    fun listar(
+        argAtendimento: MutableList<Atendimento>,
+        argAdapter: AdapterAtendimento,
+        c: Context
+    ) {
         val db = abrirDB()
 
         db.collection("atendimento")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.w("Firestore", "Erro ao ouvir mudanças", error)
-                    Toast.makeText(c, "Você está off-line neste momento!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(c, "Você está off-line neste momento!", Toast.LENGTH_SHORT)
+                        .show()
                     return@addSnapshotListener
                 }
 
                 if (snapshot != null) {
-                    Log.d("Firestore", "Snapshot recebido com ${snapshot.documents.size} documentos")
+                    Log.d(
+                        "Firestore",
+                        "Snapshot recebido com ${snapshot.documents.size} documentos"
+                    )
 
                     argAtendimento.clear()
 
@@ -87,22 +96,34 @@ class Database {
             }
     }
 
-    fun listarAtendimentesAteUmMesAtras(argAtendimento: MutableList<Atendimento>, argAdapter: AdapterAtendimento, c: Context){
+    fun listarAtendimentesDoMesPassado(
+        argAtendimento: MutableList<Atendimento>,
+        argAdapter: AdapterAtendimento,
+        c: Context
+    ) {
         val db = abrirDB()
 
         val formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss")
-        val dataLimite = LocalDateTime.now().minusMonths(1)
+
+        // Pega o mês anterior ao atual
+        val agora = LocalDate.now()
+        val primeiroDiaMesPassado = agora.minusMonths(1).withDayOfMonth(1).atStartOfDay()
+        val ultimoDiaMesPassado = agora.withDayOfMonth(1).minusDays(1).atTime(23, 59, 59)
 
         db.collection("atendimento")
             .addSnapshotListener { snapshot, error ->
                 if (error != null) {
                     Log.w("Firestore", "Erro ao ouvir mudanças", error)
-                    Toast.makeText(c, "Você está off-line neste momento!", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(c, "Você está off-line neste momento!", Toast.LENGTH_SHORT)
+                        .show()
                     return@addSnapshotListener
                 }
 
                 if (snapshot != null) {
-                    Log.d("Firestore", "Snapshot recebido com ${snapshot.documents.size} documentos")
+                    Log.d(
+                        "Firestore",
+                        "Snapshot recebido com ${snapshot.documents.size} documentos"
+                    )
 
                     argAtendimento.clear()
 
@@ -113,7 +134,10 @@ class Database {
                             try {
                                 val entradaData = LocalDateTime.parse(entradaStr, formatter)
 
-                                if (entradaData.isAfter(dataLimite)) {
+                                // Filtrar somente datas dentro do mês passado
+                                if (entradaData.isAfter(primeiroDiaMesPassado.minusSeconds(1)) &&
+                                    entradaData.isBefore(ultimoDiaMesPassado.plusSeconds(1))
+                                ) {
                                     val atendimento = Atendimento().apply {
                                         setId(document.id)
                                         setNome(document.getString("nome") ?: "")
@@ -137,5 +161,4 @@ class Database {
                 }
             }
     }
-
 }

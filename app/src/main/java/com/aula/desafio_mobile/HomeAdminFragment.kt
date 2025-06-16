@@ -46,7 +46,7 @@ class HomeAdminFragment : Fragment() {
     }
 
     private fun setupFirestoreListener() {
-        db.listarAtendimentesAteUmMesAtras(atendimentos, adapterAtendimento, requireContext())
+        db.listarAtendimentesDoMesPassado(atendimentos, adapterAtendimento, requireContext())
     }
 
     override fun onDestroyView() {
