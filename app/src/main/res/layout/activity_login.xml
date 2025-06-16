@@ -15,7 +15,7 @@
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="32dp"
+                android:layout_marginTop="17dp"
                 android:text="Seja bem-vindo!"
                 android:textSize="24sp"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -71,13 +71,13 @@
 
             <ImageView
                 android:id="@+id/imageView"
-                android:layout_width="154dp"
-                android:layout_height="143dp"
-                android:layout_marginTop="68dp"
-                android:src="@drawable/perfil_logos"
+                android:layout_width="175dp"
+                android:layout_height="182dp"
+                android:layout_marginTop="44dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                app:srcCompat="@drawable/perfil_logos" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
